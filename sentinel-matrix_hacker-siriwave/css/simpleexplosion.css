@@ -1,0 +1,33 @@
+body,
+html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  min-height: 100vh;
+}
+#emitter {
+  background-color: #222;
+  border: dashed 2px var(--color-surface-white);
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+.dot {
+  background-color: #4c9a0f;
+  border-radius: 50%;
+  position: absolute;
+  z-index:5000;
+  pointer-events:none;
+}
+
+.text {
+  margin-top: 3rem;
+}

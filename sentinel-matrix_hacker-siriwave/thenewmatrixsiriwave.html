@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentient HTML5 Core - The New Matrix Rain</title>
+    <link rel="icon" href="images/hacker_icon.jpg" sizes="150x150" />
+
+    <!-- Fonts Linked in CSS for better performance: -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&family=Oswald:wght@200..700&family=Shadows+Into+Light+Two&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome CDN for clean play/pause icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="css/thenewmatrix.css">
+    <!-- <link rel="stylesheet" href="css/3jsaudioglobe.css"> -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/gsap.min.js"></script>
+     -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/Draggable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/InertiaPlugin.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/Physics2DPlugin.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/ScrambleTextPlugin.min.js"></script>
+
+    <!-- Gui controls for Matrix Rain: -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.9/dat.gui.min.js"></script>
+
+    <!-- SiriWave.js CDN for audio visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/siriwave/dist/siriwave.min.js"></script>
+    <!-- WITH THIS COMMENTED OUT, THE AUDIO VISUALIZER APPEARS UP TOP AND A WATER EFFECT HAPPENS AT THE BOTTOM  -->
+    <script src="https://unpkg.com/siriwave/dist/siriwave.umd.min.js"></script>
+
+    <!-- The Three JS is not working yet, so I commented out the importmap and module script tags for now. Will fix later. -->
+    <!-- <script type="importmap">
+        {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
+            }
+        }
+    </script>  -->
+
+</head>
+<body>
+
+    <canvas id="matrix"></canvas>
+
+    <!-- Floating toggle with Font Awesome icon -->
+    <button id="rain-toggle" class="rain-toggle" title="Pause / Resume Rain" aria-label="Toggle rain animation">
+        <i id="toggle-icon" class="fas fa-pause"></i>
+        <!-- <i class="fa-solid fa-toggle-on"></i> -->
+    </button>
+
+    <!-- Cyberpunk modal -->
+    <dialog id="cyber-modal" class="cyber-modal">
+       
+        <div class="modal-inner">
+            <button class="close-modal" aria-label="Close modal">×</button>
+            <h2 class="modal-header">INJECTION ACKNOWLEDGED</h2>
+            <pre id="modal-message" class="modal-message"></pre>
+            <button id="apply-changes" class="neon-button">CONFIRM & APPLY</button>
+        </div>
+    </dialog>
+
+    <!-- Commnandline interface: -->
+    <div id="chat">
+        <div id="output">Awakening... Sentinel, command me. (e.g., "Generate a responsive navbar")</div>
+        <input type="text" id="input" placeholder="Inject 🗝️ Keyword directive..." autocomplete="off">
+        <button id="execute-btn">永 Execute</button>
+        <button id="train-good">永 Learn</button>
+        <button id="train-bad">永 Forget</button>
+    </div>
+
+    <!-- GSAP Emitter with Question Mark for Instructions: -->
+     <div class="emitter" id="emitter">
+
+       <button
+        id="instructions-btn"
+        class="instructions-btn"
+        aria-label="Show Instructions"
+      >
+        <img src="images/question-green-small.png" alt="Instruction Modal" class="question_mark"><span id="eternity">永</span>
+        <!-- <i class="question_help fa-solid fa-question"></i> -->
+      </button>
+      </div>
+     
+    </header>
+
+    <!-- Instructions Modal -->
+    <div id="instructions-modal" class="instructions instructions-modal">
+      <div class="modal-content">
+        <button class="intruction-toggle_btn close-btn" aria-label="Close Instructions">
+          <i class="fa fa-times"></i>
+        </button>
+        <h2>How to have fun with the New Matrix Rain</h2>
+         <hr width="auto" class="hr_ruler" size="5" id="hr_ruler" />
+        <div class="instructions-content">
+          <ul class="no-bullets">
+               <li><span class="eternity-symbol">永</span> Customize your matrix rain experience using the GUI controls at the bottom right. Adjust speed, size, and color to your liking!</li> 
+               <li><span class="eternity-symbol">永</span> You can type commands directly into the input field and click 'Execute' to apply them on the fly!</li>
+               <li><span class="eternity-symbol">永</span> You can also click the 'CONFIRM & APPLY' button in the modal after entering a command to see the changes take effect immediately.</li>
+               <li><span class="eternity-symbol">永</span> If you want background music, click the '🎵 Music Player ▼' button to toggle the music on/off.</li>
+               <li><span class="eternity-symbol">永</span> If you want to view an audio visualizer, click the '🎵 Music Player ▼' button to view an audio visualizer.</li>
+              
+               <li><span class="eternity-symbol">永</span> You can drag the circular emitter around the screen to create particle explosions wherever you like. Try it out by clicking or hovering over the emitter! </li>
+               <li><span class="eternity-symbol">永</span> The Color Swatch is also draggable!</li>
+               <li><span class="eternity-symbol">永</span> The bottom right button allows the user to random letters which form matrix sentences.</li>
+               <li><span class="eternity-symbol">永</span> Remember, use the question mark to open up the Instructions Modal.</li>
+               <li><span class="eternity-symbol">永</span> The chinese character <span class="eternity-symbol">永</span> symbolizes 'eternity' !</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+
+     
+
+     <!-- This is the old not in use Dat HTML GUI controls -->
+     <!-- GUI Controls for Matrix Rain: -->
+
+     <div class="gui-controls" id="gui-controls">
+        <!--
+        <label for="size">Size:</label>
+        <input type="range" id="size" min="1" max="100" value="50">
+
+        <label for="speed">Speed:</label>
+        <input type="range" id="speed" min="1" max="20" value="5">
+        -->
+        <label for="color" class="color-label" id="color_palette">
+        <i id="color-palette-icon" class="fa-solid fa-palette"></i></label>
+        <input type="color" id="color" class="color-swatch" value="#4c9a0f">
+        <!-- <span id="hex-label" class="hex-label">#709358</span> -->
+  
+    </div>
+    <div class="desert-of-the-real-container">
+        <h1 class="text heading-text">
+            Welcome to the Desert of the Real!
+        </h1>
+    </div>
+    <!-- <button id="next" class="matrix-btn">>></button> -->
+  
+     <svg id="matrix-spoon" xmlns="http://www.w3.org/2000/svg" width="220" height="60" viewBox="0 0 220 60">
+        <rect x="0" y="0" width="60" height="60" rx="30" ry="30" fill="#009111" />
+        <rect x="0" y="0" width="220" height="60" rx="30" ry="30" fill="none" stroke="#009111" stroke-width="2"/> 
+        <text transform="translate(130 38)" text-anchor="middle" font-size="20" fill="#ffffff">Spoon me!</text>
+        <line x1="38" y1="30" x2="38" y2="30" stroke-width="4" stroke="#fff" stroke-linecap="round" stroke-linejoin="round"/>
+        <polyline id="start" points="27 20 38 30 27 40" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="white" stroke-width="4"></polyline>
+    </svg>
+
+    <!-- Start of: Audio and Three JS Audio -->
+    <div id="cosmic-suite" class="audioToggleCosmicSuite"><i class="fa-etch fa-solid fa-music" id="fa-music"></i></div>
+    
+    <!-- IF I comment this out, the gui spans the entire width of the screen. It looks good but not for this project. -->
+     <div id="audio-controls" style="cursor:pointer; position: fixed; bottom: 320px; right: 20px; z-index: 100; background: rgba(0,0,0,0.8); padding: 15px; border: 2px solid rgb(16, 194, 16); border-radius: 5px; font-family: monospace; color: rgb(3, 138, 3);">
+     <!-- IF I comment this out, the gui spans half the width of the screen. It looks good and I may decide to keep but not sure -->
+     <div id="audio-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 100; background: rgba(0,0,0,0.9); border: 2px solid rgb(5, 124, 5); border-radius: 5px; font-family: monospace; color: rgb(8, 102, 8); width: 220px; transition: all 0.3s ease;">
+   
+    <!-- Collapse/Expand Button -->
+    <button class="audio-toggle" id="toggle-audio" style="font-family:'Source Sans 3','Oswald', 'Orbitron',  sans-serif;font-size:14px; font-weight:400;letter-spacing:2px; width:100%; position:relative; left:-7px; padding: 5px; background: rgb(70, 155, 1); color: #e4e4e4; border: 1px solid #020202; cursor: pointer; border-radius: 3px;">🎵 Music Player ▼</button>
+  
+    <!-- Collapsible Content -->
+    <div id="audio-content" style="padding: 15px; display: block;">
+    
+    <div style="margin-bottom: 10px;">
+      <label for="audio-file" style="font-family: 'Oswald','Orbitron', sans-serif;font-size:12px; color:white">Select MP3:</label>
+      <input type="file" id="audio-file" accept=".mp3,.wav,.ogg" style="font-family: 'Oswald','Orbitron', sans-serif;font-size:12px;margin-top: 5px; width: 100%; padding: 5px; background: #111; color: rgb(11, 66, 11); border: 1px solid rgb(5, 165, 5);">
+    </div>
+
+    <div style="margin-bottom: 10px;">
+      <label for="audio-url" style="font-family: 'Oswald','Orbitron', sans-serif;font-size:12px; color:white">Remote URL:</label>
+      <input type="text" id="audio-url" placeholder="https://example.com/track.mp3" style="font-family: 'Oswald','Orbitron', sans-serif;font-size:12px;margin-top: 5px; width: 100%; padding: 6px; background: #111; color: #e4e4e4; border: 1px solid rgb(5, 165, 5);">
+      <button id="audio-load-url" class="audio-btn" style="width: 100%; margin-left:0px; margin-top: 8px; padding: 8px; background: rgb(16, 147, 24); color: #fff; border: 1px solid whitesmoke; cursor: pointer; font-weight: bold;">Load URL</button>
+    </div>
+    
+    <div class="audio-controls" style="margin-bottom: 10px; display: flex; gap: 5px; position:relative; left:-4px;text-align: center;">
+        <button class="audio-btn" id="audio-play" style="flex: 1; padding: 8px; background: rgb(1, 133, 1); color: #e7e4e4;border: 1px solid whitesmoke; cursor: pointer; font-weight: bold;" onmouseover="this.style.color='orange';"onmouseout="this.style.color='gold';">▶</button>
+        <button class="audio-btn" id="audio-pause" style="flex: 1; padding: 8px; background: rgb(1, 133, 1); color: #e7e4e4;border: 1px solid whitesmoke; cursor: pointer; font-weight: bold;" onmouseover="this.style.color='orange';"onmouseout="this.style.color='gold';">⏸</button>
+        <button class="audio-btn" id="audio-stop" style="flex: 1; padding: 8px; background: rgb(1, 133, 1);color: #e7e4e4; border: 1px solid whitesmoke; cursor: pointer; font-weight: bold;" onmouseover="this.style.color='orange';"onmouseout="this.style.color='gold';">⏹</button>
+    </div>
+
+    <div style="margin-bottom: 10px; font-size: 11px; word-break: break-word;">
+        <span id="current-track">No track loaded</span>
+        <span id="audio-status" style="display:block; margin-top:6px; color:#ccc;">Choose a local MP3 or enter a remote URL.</span>
+    </div>
+    <!-- </div> -->
+
+    <!-- Wavesurfer Container: -->
+<!--
+  <div id="waveform-container">
+    <div id="waveform"></div>
+  </div>
+-->
+
+  <!-- The original spectrum container but was not working -->
+  <!-- <canvas id="spectrum-visualizer" width="200" height="80" style="padding-left:0px; margin:auto; border: 1px solid rgb(2, 82, 2); display: block;"></canvas> -->
+    <!-- SiriWave Container: -->
+    <div id="siri-container"></div>
+
+    <div style="margin-top: 10px; text-align:center;font-size: 12px;">
+        <span id="time-display">0:00 / 0:00</span>
+    </div>
+    <audio id="audio-player" hidden></audio>
+    </div>
+
+    <!-- End of: Three JS Audio -->
+    <!-- Start of: Internal Scripts for Matrix Rain, SiriWave Visualizer and UI interactions  -->
+<script>
+  var siriWave = new SiriWave({
+    container: document.getElementById("siri-container"),
+    width: 640,
+    height: 200,
+    autostart: true,
+  });
+  //this is the larger audio visualizer at the top, when I comment out this "https://unpkg.com/siriwave/dist/siriwave.umd.min.js"
+  // var SW = new SiriWave({
+  //   container: document.getElementById("container"),
+  //   autostart: true,
+  // });
+  // This is the water wave effect
+  // var SW9 = new SiriWave({
+  //   style: "ios9",
+  //   container: document.getElementById("container-9"),
+  //   autostart: true,
+  // });
+  </script>
+
+<script>
+  window.onload = function () {
+    if (typeof SW === 'undefined' || typeof SW9 === 'undefined') {
+      return;
+    }
+
+    var gui = new dat.GUI();
+    gui.add(SW, "speed", 0, 1);
+    gui.add(SW, "amplitude", 0, 3);
+    gui.addColor(SW, "color");
+
+    var gui9 = new dat.GUI();
+    gui9.add(SW9, "speed", 0, 1);
+    gui9.add(SW9, "amplitude", 0, 3);
+  };
+</script>
+
+    <script>
+      let cosmicsuite = document.getElementById('cosmic-suite');
+      cosmicsuite.addEventListener('click', toggleMusic);
+      let bgmusic = false;
+
+      let martian = new Audio()
+      martian.src = './sounds/martian.mp3'
+
+      function spaceWarningFX() {
+        martian.play();
+      }
+
+      
+      let space = new Audio()
+    space.src = './sounds/cosmicsuite.mp3'
+
+      function toggleMusic() {
+        martian.play()
+        bgmusic = !bgmusic
+        space.play()
+        if (!bgmusic) {
+          space.pause()
+        }
+      }
+    </script>
+    <script>
+        gsap.registerPlugin(Draggable, InertiaPlugin, Physics2DPlugin);
+        // Grab the color picker
+        const colorPicker = document.getElementById('color');
+        const guiControls = document.getElementById('gui-controls');
+        const audiocontrols = document.getElementById("audio-controls");
+        // Make the color swatch draggable
+            Draggable.create("#gui-controls", {
+            inertia: true,
+            bounds: window,
+            edgeResistance: 0.7
+            });
+      // Make the audio controls draggable
+            Draggable.create("#audio-controls", {
+            inertia: true,
+            bounds: window,
+            edgeResistance: 0.7
+            });
+     
+
+        // Listen for any change (live as you drag/scrub)
+        colorPicker.addEventListener('input', (e) => {
+        const newColor = e.target.value.toUpperCase(); // e.g. #FF0000
+
+        // Update your global colors array (same one keywords use)
+        colors = [newColor]; // single color mode – replace current
+
+        // Optional: If you want multi-color support later
+        colors = [newColor, ...colors.slice(1)]; // add to front, keep up to 4
+
+     });
+
+        // Optional: Initialize from picker on page load (syncs with default value)
+        window.addEventListener('load', () => {
+        colors = [colorPicker.value.toUpperCase()];
+        });
+    </script>
+
+  <script type="module">
+  // Toggle collapse/expand
+        const toggleBtn = document.getElementById('toggle-audio');
+        const audioContent = document.getElementById('audio-content');
+        const siriContainer = document.getElementById('siri-container');
+        let isExpanded = false;
+    
+        toggleBtn.addEventListener('click', () => {
+            isExpanded = !isExpanded;
+            audioContent.style.display = isExpanded ? 'block' : 'none';
+            toggleBtn.textContent = isExpanded ? '🎵 Music Player ▲' : '🎵 Music Player ▼';
+        });
+  </script>
+
+    
+    <script src="scripts/thenewmatrix.js" defer></script>
+    <script src="scripts/instructions.js"></script>
+    <script src="scripts/gsapcollection.js" defer></script>
+    <script src="scripts/audio.js" defer></script>
+    <!-- <script src="scripts/threejsaudio.js" defer></script> -->
+    
+
+<!-- Credits: Mr.X's Frosty, Mr. Google's Gemini, Mr. Brave's Leo and the one who doesn't require credit  -->
+  
+
+</body>
+</html>
+
