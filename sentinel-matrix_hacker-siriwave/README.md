@@ -1,4 +1,4 @@
-# sentinel-matrix_hacker
+#🎵🎶 A Sentinel Matrix Rain Hacking Siri Audio Visualizing App 🎶🎵
 This is an interactive matrix rain app with lots of fun stuff to play with.
 # Sentinel Matrix Hacker
 
@@ -23,6 +23,7 @@ https://user-images.githubusercontent.com/xxxxxxx/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxx
 - Native HTML color picker (draggable, live preview)
 - dat.GUI sliders for Size & Speed (with GSAP elastic spring animation)
 - Draggable particle emitter with GSAP explosions (hover/click)
+- A Custom Audio File Component which allows custom mp3 files with an Audio Visualizer.
 - Instructions modal with exploding GSAP particles & 永 symbol
 - Bottom-left button cycles randomized Matrix-themed sentences (glitch reveal effect)
 - Pause/resume toggle with neon play/pause icon
@@ -72,6 +73,7 @@ https://user-images.githubusercontent.com/xxxxxxx/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxx
 - JavaScript (vanilla)
 - GSAP (animations, springs, particles)
 - dat.GUI (sliders – optional, can be removed)
+- Siri Wave Audio Visualizer 🎵
 - Native `<input type="color">` & `<input type="range">`
 - Font Awesome (icons)
 
@@ -82,4 +84,4 @@ git clone https://github.com/Captainancient/sentinel-matrix-hacker.git
 cd sentinel-matrix-hacker
 # Open index.html in browser
 
-Credits: Mr. Frosty, Google, GSAP and one who wishes to remain anonymous
+Credits: Mr. Frosty, Google, Co-Pilot, GSAP and one who wishes to remain anonymous
